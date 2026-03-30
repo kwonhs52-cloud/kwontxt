@@ -136,7 +136,7 @@
 
   <script>
     const RSS_URL = 'https://rss.blog.naver.com/kwonhuiseok';
-    const PROXY = 'https://corsproxy.io/?';
+    const PROXY = 'https://api.allorigins.win/get?url=';
 
     function formatDate(dateStr) {
       const d = new Date(dateStr);
@@ -147,8 +147,8 @@
       const list = document.getElementById('post-list');
       try {
         const res = await fetch(PROXY + encodeURIComponent(RSS_URL));
-        const text = await res.text();
-        const xml = new DOMParser().parseFromString(text, 'text/xml');
+        const data = await res.json();
+        const xml = new DOMParser().parseFromString(data.contents, 'text/xml');
         const items = Array.from(xml.querySelectorAll('item')).slice(0, 7);
 
         if (items.length === 0) {
