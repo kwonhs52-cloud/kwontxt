@@ -17,41 +17,15 @@
       padding: 48px 20px;
     }
 
-    .container {
-      width: 100%;
-      max-width: 480px;
-    }
+    .container { width: 100%; max-width: 480px; }
 
-    .profile {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+    .profile { text-align: center; margin-bottom: 40px; }
+    .profile h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .profile p { margin-top: 8px; font-size: 14px; color: #999; }
 
-    .profile h1 {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
+    .section-title { font-size: 12px; color: #aaa; letter-spacing: 1px; margin-bottom: 12px; }
 
-    .profile p {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #999;
-    }
-
-    .section-title {
-      font-size: 12px;
-      color: #aaa;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .post-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
+    .post-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 
     .post-item {
       display: block;
@@ -62,30 +36,11 @@
       color: inherit;
       transition: background 0.15s;
     }
+    .post-item:hover { background: #f7f7f7; }
+    .post-item .post-title { font-size: 15px; font-weight: 600; line-height: 1.5; color: #111; }
+    .post-item .post-date { font-size: 12px; color: #bbb; margin-top: 4px; }
 
-    .post-item:hover {
-      background: #f7f7f7;
-    }
-
-    .post-item .post-title {
-      font-size: 15px;
-      font-weight: 600;
-      line-height: 1.5;
-      color: #111;
-    }
-
-    .post-item .post-date {
-      font-size: 12px;
-      color: #bbb;
-      margin-top: 4px;
-    }
-
-    .more-note {
-      font-size: 12px;
-      color: #bbb;
-      text-align: center;
-      margin-bottom: 24px;
-    }
+    .more-note { font-size: 12px; color: #bbb; text-align: center; margin-bottom: 24px; }
 
     .blog-link {
       display: block;
@@ -98,25 +53,10 @@
       font-size: 14px;
       transition: background 0.15s;
     }
+    .blog-link:hover { background: #f7f7f7; color: #111; }
 
-    .blog-link:hover {
-      background: #f7f7f7;
-      color: #111;
-    }
-
-    .loading {
-      text-align: center;
-      color: #bbb;
-      font-size: 14px;
-      padding: 40px 0;
-    }
-
-    .error {
-      text-align: center;
-      color: #bbb;
-      font-size: 14px;
-      padding: 20px 0;
-    }
+    .loading { text-align: center; color: #bbb; font-size: 14px; padding: 40px 0; }
+    .error { text-align: center; color: #bbb; font-size: 14px; padding: 20px 0; }
   </style>
 </head>
 <body>
@@ -138,43 +78,27 @@
   </div>
 
   <script>
-    const RSS_URL = 'https://rss.blog.naver.com/kwonhuiseok';
-    const PROXY = 'https://api.allorigins.win/get?url=';
-
-    function formatDate(dateStr) {
-      const d = new Date(dateStr);
-      return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
-    }
-
     async function loadPosts() {
       const list = document.getElementById('post-list');
       const note = document.getElementById('more-note');
       try {
-        const res = await fetch(PROXY + encodeURIComponent(RSS_URL));
+        const res = await fetch('./posts.json');
         const data = await res.json();
-        const xml = new DOMParser().parseFromString(data.contents, 'text/xml');
-        const all = Array.from(xml.querySelectorAll('item'));
-        const items = all.slice(0, 3);
 
-        if (items.length === 0) {
+        if (!data.items || data.items.length === 0) {
           list.innerHTML = '<div class="error">글을 불러올 수 없어요.</div>';
           return;
         }
 
-        list.innerHTML = items.map(item => {
-          const title = item.querySelector('title')?.textContent || '';
-          const link = item.querySelector('link')?.textContent || '#';
-          const pubDate = item.querySelector('pubDate')?.textContent || '';
-          return `
-            <a class="post-item" href="${link}" target="_blank">
-              <div class="post-title">${title}</div>
-              <div class="post-date">${pubDate ? formatDate(pubDate) : ''}</div>
-            </a>
-          `;
-        }).join('');
+        list.innerHTML = data.items.map(item => `
+          <a class="post-item" href="${item.link}" target="_blank">
+            <div class="post-title">${item.title}</div>
+            <div class="post-date">${item.pubDate}</div>
+          </a>
+        `).join('');
 
-        if (all.length > 3) {
-          note.textContent = `+ 이전 글 ${all.length - 3}개가 쌓여 있어요`;
+        if (data.total > 3) {
+          note.textContent = `+ 이전 글 ${data.total - 3}개가 쌓여 있어요`;
         }
       } catch (e) {
         list.innerHTML = '<div class="error">잠시 후 다시 시도해주세요.</div>';
