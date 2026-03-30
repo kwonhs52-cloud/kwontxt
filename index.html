@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>권휘석 블로그</title>
+  <link rel="preload" href="./posts.json" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="./profile.png" as="image">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,6 +22,7 @@
     .container { width: 100%; max-width: 480px; }
 
     .profile { text-align: center; margin-bottom: 40px; }
+    .profile img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; }
     .profile h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
     .profile p { margin-top: 8px; font-size: 14px; color: #999; }
 
@@ -62,6 +65,7 @@
 <body>
   <div class="container">
     <div class="profile">
+      <img src="./profile.png" alt="권휘석" width="64" height="64" fetchpriority="high" />
       <h1>권휘석</h1>
       <p>오늘도 씁니다.</p>
     </div>
@@ -82,7 +86,7 @@
       const list = document.getElementById('post-list');
       const note = document.getElementById('more-note');
       try {
-        const res = await fetch('./posts.json');
+        const res = await fetch('./posts.json', { priority: 'high' });
         const data = await res.json();
 
         if (!data.items || data.items.length === 0) {
@@ -97,9 +101,7 @@
           </a>
         `).join('');
 
-        if (data.total > 3) {
-          note.textContent = `+ 이전 글 ${data.total - 3}개가 쌓여 있어요`;
-        }
+        note.textContent = '+ 매일 업로드 됩니다';
       } catch (e) {
         list.innerHTML = '<div class="error">잠시 후 다시 시도해주세요.</div>';
       }
