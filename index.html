@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>권희석 블로그</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f0f0f;
+      color: #f0f0f0;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 48px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .profile {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .profile h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .profile p {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 12px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .post-item {
+      display: block;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .post-item:hover {
+      background: #222;
+      border-color: #444;
+    }
+
+    .post-item .post-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #f0f0f0;
+    }
+
+    .post-item .post-date {
+      font-size: 12px;
+      color: #555;
+      margin-top: 6px;
+    }
+
+    .blog-link {
+      display: block;
+      text-align: center;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 16px;
+      text-decoration: none;
+      color: #888;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .blog-link:hover {
+      background: #222;
+      color: #f0f0f0;
+    }
+
+    .loading {
+      text-align: center;
+      color: #555;
+      font-size: 14px;
+      padding: 40px 0;
+    }
+
+    .error {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile">
+      <h1>권희석</h1>
+      <p>150일째 매일 글을 씁니다.<br>글쓰기로 경제적 독립을 이루는 과정을 기록합니다.</p>
+    </div>
+
+    <div class="section-title">최근 글</div>
+    <div class="post-list" id="post-list">
+      <div class="loading">불러오는 중...</div>
+    </div>
+
+    <a class="blog-link" href="https://blog.naver.com/kwonhuiseok" target="_blank">
+      블로그 전체 글 보기 →
+    </a>
+  </div>
+
+  <script>
+    const RSS_URL = 'https://rss.blog.naver.com/kwonhuiseok';
+    const API = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}&count=7`;
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    async function loadPosts() {
+      const list = document.getElementById('post-list');
+      try {
+        const res = await fetch(API);
+        const data = await res.json();
+
+        if (!data.items || data.items.length === 0) {
+          list.innerHTML = '<div class="error">글을 불러올 수 없어요.</div>';
+          return;
+        }
+
+        list.innerHTML = data.items.map(item => `
+          <a class="post-item" href="${item.link}" target="_blank">
+            <div class="post-title">${item.title}</div>
+            <div class="post-date">${formatDate(item.pubDate)}</div>
+          </a>
+        `).join('');
+      } catch (e) {
+        list.innerHTML = '<div class="error">잠시 후 다시 시도해주세요.</div>';
+      }
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>
