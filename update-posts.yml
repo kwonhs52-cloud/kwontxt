@@ -22,6 +22,8 @@ jobs:
           python3 - <<'EOF'
           import xml.etree.ElementTree as ET
           import json
+          from email.utils import parsedate
+          from datetime import datetime, timedelta
 
           tree = ET.parse('rss.xml')
           root = tree.getroot()
@@ -35,14 +37,17 @@ jobs:
               return (node.text or '').strip()
 
           def format_date(s):
-              from email.utils import parsedate
-              from datetime import datetime
               try:
                   t = parsedate(s)
                   d = datetime(*t[:3])
                   return d.strftime('%Y.%m.%d')
               except:
                   return s[:10] if s else ''
+
+          # 연속 글쓰기 일수 계산 (시작일 기준)
+          start_date = datetime(2025, 11, 11).date()
+          today = datetime.now().date()
+          streak = (today - start_date).days + 1
 
           items = []
           for item in all_items[:3]:
@@ -57,10 +62,10 @@ jobs:
                   'pubDate': format_date(pub)
               })
 
-          result = {'items': items, 'total': len(all_items)}
+          result = {'items': items, 'streak': streak}
           with open('posts.json', 'w', encoding='utf-8') as f:
               json.dump(result, f, ensure_ascii=False, indent=2)
-          print(f"Saved {len(items)} items (total: {len(all_items)})")
+          print(f"Saved {len(items)} items, streak: {streak}")
           EOF
 
       - name: Commit and push
