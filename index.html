@@ -160,8 +160,10 @@
           </a>
         `).join('');
 
-        const streak = data.streak || 0;
-        if (streak > 0) note.textContent = `+ ${streak}일 연속 쓰는 중`;
+        const start = new Date('2025-11-11');
+        const today = new Date();
+        const streak = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
+        note.textContent = `+ ${streak}일 연속 쓰는 중`;
       } catch (e) {
         list.innerHTML = '<div class="error">잠시 후 다시 시도해주세요.</div>';
       }
