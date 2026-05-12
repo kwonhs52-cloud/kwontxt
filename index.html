@@ -88,15 +88,16 @@
     .more-note { font-size: 13px; font-weight: 600; color: #111; text-align: center; margin-bottom: 24px; }
 
     .link-btn {
-      display: block; margin-top: 8px; padding: 16px 20px;
-      border: 1px solid #e8e8e8; border-radius: 10px;
+      display: block; margin-top: 8px; padding: 18px 20px;
+      border: 1px solid #e0e0e0; border-radius: 10px;
       text-decoration: none; text-align: center;
       transition: background 0.15s, border-color 0.15s;
-      background: #fff;
+      background: #fff; min-height: 72px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
     }
-    .link-btn:hover { background: #f7f7f7; border-color: #d0d0d0; }
-    .link-btn-title { font-size: 14px; font-weight: 600; color: #111; letter-spacing: -0.3px; }
-    .link-btn-sub { font-size: 11px; color: #bbb; margin-top: 4px; }
+    .link-btn:hover { background: #f5f5f5; border-color: #bbb; }
+    .link-btn-title { font-size: 15px; font-weight: 600; color: #111; letter-spacing: -0.3px; }
+    .link-btn-sub { font-size: 12px; color: #bbb; }
 
     .threads-footer { margin-top: 32px; text-align: center; }
     .threads-icon {
@@ -133,14 +134,15 @@
     <hr style="border:none;border-top:1px solid #f0f0f0;margin:16px 0;">
     <a class="link-btn" href="https://blog.naver.com/kwonhuiseok" target="_blank">
       <div class="link-btn-title">블로그 전체 글 보기 →</div>
+      <div class="link-btn-sub">네이버 블로그 · 오늘도 씁니다</div>
     </a>
     <a class="link-btn" href="https://cafe.naver.com/iegrwrite" target="_blank">
       <div class="link-btn-title">읽을거리 카페, 함께 씁니다 →</div>
-      <div class="link-btn-sub">글쓰기 커뮤니티</div>
+      <div class="link-btn-sub">함께 쓰는 글쓰기 커뮤니티</div>
     </a>
     <a class="link-btn" href="https://ourtxt.vercel.app" target="_blank">
-      <div class="link-btn-title">Ourtxt →</div>
-      <div class="link-btn-sub">글만 쓰세요, 카드는 제가 만들게요.</div>
+      <div class="link-btn-title">내 글로 카드 만들기 →</div>
+      <div class="link-btn-sub">Ourtxt · 스트릭 카드 · 썸네일 메이커</div>
     </a>
 
     <div class="threads-footer">
